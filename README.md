@@ -50,7 +50,7 @@ To install the **ros2 pal_camera_node**, clone the package from github and build
 $ cd ~/ros2_ws/src/ #use your current ros2 workspace folder
 $ git clone https://github.com/physar/ros2_pal_camera_node.git
 $ cd ./ros2_pal_camera_node/pal_camera/
-$ source ./etc/dreamvu/link_libs.sh PAL_SDK_DIR
+$ source ./etc/dreamvu/Logic_link.sh PAL_SDK_DIR
 $ cd ../../..
 $ rosdep install --from-paths src --ignore-src -r -y
 $ colcon build --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
