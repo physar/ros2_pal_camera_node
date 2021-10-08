@@ -37,6 +37,7 @@ $ sudo apt install python3-rosdep2
 $ sudo apt install python3-colcon-common-extensions
 ```
 * [PAL USB SDK](https://dreamvu.com/sofware/) - Tested with SDK v1.2 for Ubuntu 20.04 (15 May 2021)
+> After unzipping the SDK, remember this directory location as SDK_DIR for the script that has to be executed during the Build
 * Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package).
 
 ## Build the package
@@ -46,7 +47,9 @@ To install the **ros2 pal_camera_node**, clone the package from github and build
 ```bash
 $ cd ~/ros2_ws/src/ #use your current ros2 workspace folder
 $ git clone https://github.com/physar/ros2_pal_camera_node.git
-$ cd ..
+$ cd ./ros2_pal_camera_node/pal_camera/
+$ source ./etc/dreamvu/link_libs.sh SDK_DIR
+$ cd ../../..
 $ rosdep install --from-paths src --ignore-src -r -y
 $ colcon build --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
 $ source $(pwd)/install/local_setup.bash
