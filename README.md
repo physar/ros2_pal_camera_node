@@ -52,6 +52,7 @@ $ git clone https://github.com/physar/ros2_pal_camera_node.git
 $ cd ./ros2_pal_camera_node/pal_camera/
 $ source ./etc/dreamvu/Logic_link.sh PAL_SDK_DIR
 $ cd ../../..
+$ sudo apt-get update
 $ rosdep update
 $ rosdep install --from-paths src --ignore-src -r -y
 $ colcon build --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
