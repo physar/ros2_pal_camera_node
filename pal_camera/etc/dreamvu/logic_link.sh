@@ -13,5 +13,5 @@ ln -s $pal_sdk_dir/lib/libPAL.so .
 ln -s $pal_sdk_dir/lib/libPAL_CAMERA.so .
 ln -s $pal_sdk_dir/lib/libPAL_DEPTH.so .
 ln -s $pal_sdk_dir/lib/libPAL_DE.so 
-ln -s $pal_sdk_dir/lib/libPAL_SDD.so 
+ln -s $pal_sdk_dir/lib/libPAL_SSD.so 
 cd ../..
