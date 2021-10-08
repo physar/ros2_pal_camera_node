@@ -37,6 +37,12 @@ $ sudo apt install python3-rosdep2
 $ sudo apt install python3-colcon-common-extensions
 ```
 * [PAL USB SDK](https://dreamvu.com/sofware/) - Tested with SDK v1.2 for Ubuntu 20.04 (15 May 2021)
+```bash
+$ unzip PAL-Firmware-v1.2-Intel-CPU.zip
+$ cd PAL-Firmware-v1.2-Intel-CPU/installations/
+$ sudo ./PAL_udev.sh
+REBBOT
+```
 > After unzipping the SDK, remember this directory location as PAK_SDK_DIR for the script that has to be executed during the Build
 * Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package).
 
