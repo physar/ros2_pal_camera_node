@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.5)
+cmake_minimum_required(VERSION 3.16)
 project(pal_camera)
 
 # Default to C99
@@ -47,7 +47,7 @@ endforeach()
 
 set(PAL_LIBS  libPAL.so libPAL_CAMERA.so libPAL_DEPTH.so)
 
-nclude_directories(
+include_directories(
         /usr/local/include
         ./include
         #       ${OpenCV_INCLUDE_DIRS}
