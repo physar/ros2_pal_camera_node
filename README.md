@@ -1,12 +1,12 @@
-![](https://dreamvu.com/wp-content/uploads/2020/07/logo_headerdmvu.png "DreamVU")
+<img src=https://dreamvu.com/wp-content/uploads/2020/07/logo_footer_trans-1-1.png alt="DreamVU">
 
 # ros2_pal_camera_node
 
-This package creates a ros2 node which publishes the panoramic images (both color and depth) and a point cloud from [the DreamVU PAL camera](https://dreamvu.com/pal-usb/).
+This unoffical package creates a ros2 node which publishes the panoramic images (both color and depth) and a point cloud from [the DreamVU PAL camera](https://dreamvu.com/pal-usb/).
 
 An official ros1-package is available at [the DreamVU software page](https://dreamvu.com/software/), which is a package based on the Catkin build system.
 
-This package is based on the Colcon build system, which allows to build the package for the combination of Ubuntu 20.04 (Focal Fossa) with ROS2 Foxy Fitxroy.
+This package here is based on the Colcon build system, which allows to build the package for the combination of Ubuntu 20.04 (Focal Fossa) with ROS2 Foxy Fitxroy.
 
 This package lets you use the PAL camera with ROS2. It will provide access to the following data:
 
@@ -58,4 +58,47 @@ If you want to install this package permanently ot your shell,
 $ echo source $(pwd)/install/local_setup.bash >> ~/.bashrc
 $ source ~/.bashrc
 ```
+
+# Starting the PAL camera node
+
+To start the **ros2 pal_camera_node**, open a terminal and start it with the command.
+
+```bash
+$ source /opt/ros/foxy/setup.bash
+$ source $~/ros2_ws/install/local_setup.bash
+$ ros2 run dreamvu_pal_camera capture
+```
+
+# Inspect the published topics
+
+The easiest way to inspect the published data is the following command:
+
+```bash
+$ ros2 topic list | grep dreamvu
+```
+This should give the following result:
+
+```bash
+/dreamvu/pal/get/camera_info
+/dreamvu/pal/get/depth
+/dreamvu/pal/get/left
+/dreamvu/pal/get/point_cloud
+/dreamvu/pal/get/right
+```
+The next way to see the panoramic images is with image_view:
+```bash
+$ ros2 run image_view image_view --ros-args --remap image:=/dreamvu/pal/get/right
+```
+
+The complete set of published data can be seen by the following command:
+```bash
+ros2 run rviz2 rviz2
+```
+
+Add in this view an Image (for the topics ```/dreamvu/pal/get/left```, ```/dreamvu/pal/get/right```, ```/dreamvu/pal/get/depth``` or a PointCloud2 (for topic ```/dreamvu/pal/get/point_cloud```).
+
+*In later versions of this package a launch script with for rviz2 will be provided.
+
+
+
 
