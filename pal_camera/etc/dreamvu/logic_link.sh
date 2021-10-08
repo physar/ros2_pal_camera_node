@@ -6,6 +6,7 @@ cd ./include/dreamvu
 ln -s $pal_sdk_dir/include/PAL.h .
 ln -s $pal_sdk_dir/include/PAL_Image.h .
 ln -s $pal_sdk_dir/include/PAL_CameraProperties.h .
+cd ../..
 
 cd ./lib/dreamvu
 ln -s $pal_sdk_dir/lib/libPAL.so .
