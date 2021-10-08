@@ -1,4 +1,4 @@
-********************************************************************************
+/********************************************************************************
  * MIT License
  *
  * Copyright (c) 2021 Arnoud Visser - creating a PAL-camera capture node for ROS2
@@ -89,7 +89,9 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
     RCLCPP_ERROR(get_logger(), "Failed to start pal-camera node");
     exit(EXIT_FAILURE);
   }
-    
+ 
+}
+  
 /**
  * Cleaning up when destroying a ROS2-node for the PAL camera
 **/
