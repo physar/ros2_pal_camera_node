@@ -97,7 +97,7 @@ ros2 run rviz2 rviz2
 
 Add in this view an Image (for the topics ```/dreamvu/pal/get/left```, ```/dreamvu/pal/get/right```, ```/dreamvu/pal/get/depth``` or a PointCloud2 (for topic ```/dreamvu/pal/get/point_cloud```).
 
-*In later versions of this package a launch script with for rviz2 will be provided.
+*In later versions of this package a launch script with for rviz2 will be provided*.
 
 
 
