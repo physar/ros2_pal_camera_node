@@ -262,7 +262,9 @@ void PalCameraNode::defineCamInfo(camInfoMsgPtr leftCamInfoMsg,
   rightCamInfoMsg->k[8] = 1.0;
 
   leftCamInfoMsg->r.fill(0.0); // rectification_matrix
-  rightCamInfoMsg->r.fill(0.0);for (size_t i = 0; i < 3; i++) // create identity matrix
+  rightCamInfoMsg->r.fill(0.0);
+  
+  for (size_t i = 0; i < 3; i++) // create identity matrix
   {
     rightCamInfoMsg->r[i + i * 3] = 1;
     leftCamInfoMsg->r[i + i * 3] = 1;
