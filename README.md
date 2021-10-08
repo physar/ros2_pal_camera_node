@@ -50,7 +50,7 @@ To install the **ros2 pal_camera_node**, clone the package from github and build
 $ cd ~/ros2_ws/src/ #use your current ros2 workspace folder
 $ git clone https://github.com/physar/ros2_pal_camera_node.git
 $ cd ./ros2_pal_camera_node/pal_camera/
-$ source ./etc/dreamvu/Logic_link.sh PAL_SDK_DIR
+$ source ./etc/dreamvu/logic_link.sh PAL_SDK_DIR
 $ cd ../../..
 $ sudo apt-get update
 $ rosdep update
