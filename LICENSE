@@ -1,6 +1,8 @@
 MIT License
 
-Copyright (c) 2021 Arnoud Visser
+* Copyright (c) 2021 Arnoud Visser - creating a PAL-camera capture node for ROS2
+* Copyright (c) 2020 Stereolabs - substantial portions of this code was inspired by StereoLabs zed_components for ROS2
+* Copyright (c) 2020 DreamVU - substantial portions of this code were based on DreamVU orginal ROS1 node
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
