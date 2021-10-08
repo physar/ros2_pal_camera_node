@@ -71,7 +71,7 @@ To start the **ros2 pal_camera_node**, open a terminal and start it with the com
 ```bash
 $ source /opt/ros/foxy/setup.bash
 $ source $~/ros2_ws/install/local_setup.bash
-$ ros2 run dreamvu_pal_camera capture
+$ ros2 run pal_camera capture
 ```
 
 # Inspect the published topics
