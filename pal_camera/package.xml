@@ -4,7 +4,7 @@
   <name>pal_camera</name>
   <version>0.1.1</version>
   <description>Ros 2 Interface to DreamVU Pal camera</description>
-  <maintainer email="a.visser@uva.nl">Arnoud Vissr</maintainer>
+  <maintainer email="a.visser@uva.nl">Arnoud Visser</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
