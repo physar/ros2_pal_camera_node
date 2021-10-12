@@ -36,7 +36,7 @@ $ sudo apt install ros-foxy-image-view
 $ sudo apt install python3-rosdep2
 $ sudo apt install python3-colcon-common-extensions
 ```
-* [PAL USB SDK](https://dreamvu.com/sofware/) - Tested with SDK v1.2 for Ubuntu 20.04 (15 May 2021)
+* [PAL USB SDK](https://dreamvu.com/software/) - Tested with SDK v1.2 for Ubuntu 20.04 (15 May 2021)
 ```bash
 $ unzip PAL-Firmware-v1.2-Intel-CPU.zip
 $ cd PAL-Firmware-v1.2-Intel-CPU/installations/
