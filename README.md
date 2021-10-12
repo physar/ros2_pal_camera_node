@@ -41,7 +41,7 @@ $ sudo apt install python3-colcon-common-extensions
 $ unzip PAL-Firmware-v1.2-Intel-CPU.zip
 $ cd PAL-Firmware-v1.2-Intel-CPU/installations/
 $ sudo ./PAL_udev.sh
-REBBOT
+REBOOT
 ```
 > After unzipping the SDK, remember this directory location as PAK_SDK_DIR for the script that has to be executed during the Build
 * Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package).
