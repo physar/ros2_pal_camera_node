@@ -24,6 +24,20 @@ The published 3D point-cloud seems to requires a computer with a GPU, to allow r
 
 * [Ubuntu 20.04 (Focal Fossa)](https://releases.ubuntu.com/focal/)
 * [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
+
+If the ros-foxy repository is not already on your package list, add it
+
+```bash
+sudo apt update && sudo apt install curl gnupg2 lsb-release
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+sudo apt update
+```
+
+This ros-node is using the following ros-packages:
+
 ```bash
 $ sudo apt install ros-foxy-ros-base
 $ sudo apt install ros-foxy-rviz2
