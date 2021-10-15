@@ -23,6 +23,19 @@ The published 3D point-cloud seems to requires a computer with a GPU, to allow r
 ### Prerequisites
 
 * [Ubuntu 20.04 (Focal Fossa)](https://releases.ubuntu.com/focal/)
+
+Next to the default packages, also install
+
+```bash
+sudo apt install usbutils
+sudo apt install v4l-utils
+
+suda add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.6-dev
+sudo apt install python3-pip
+```
+
 * [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
 
 If the ros-foxy repository is not already on your package list, add it

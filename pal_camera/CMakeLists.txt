@@ -45,7 +45,7 @@ foreach(version $AVAILABLE_ROS_VERSIONS})
         find_path(ROS_LIBRARY_PATH librclcpp.so /opt/ros/${version}/lib)
 endforeach()
 
-set(PAL_LIBS  libPAL.so libPAL_CAMERA.so libPAL_DEPTH.so)
+set(PAL_LIBS  libPAL.so libPAL_CAMERA.so libPAL_DEPTH.so libPAL_DE.so)
 set(OPENCV_LIBS  libopencv_calib3d.so.3.4 libopencv_core.so.3.4 libopencv_features2d.so.3.4 libopencv_flann.so.3.4 libopencv_imgcodecs.so.3.4 libopencv_imgproc.so.3.4 libopencv_videoio.so.3.4 libopencv_ximgproc.so.3.4)
 
 include_directories(
@@ -65,9 +65,10 @@ link_libraries(
         ${PAL_LIBS}
         )
 
-#target_link_libraries(
-        #${PKG_OPENCV_LDFLAGS}
-        #       )
+target_link_libraries(
+        ${PAL_LIBS}
+        ${OPENCV_LIBS}
+        )
 
 add_executable(capture src/pal_camera_capture.cpp src/pal_camera_node.cpp)
 ament_target_dependencies(capture rclcpp std_msgs cv_bridge image_transport camera_info_manager ${DEPENDENCIES} )
@@ -87,4 +88,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_libraries(pal_camera)
 ament_package()

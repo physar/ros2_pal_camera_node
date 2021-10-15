@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 pal_sdk_dir=$1
 
@@ -15,3 +15,6 @@ ln -s $pal_sdk_dir/lib/libPAL_DEPTH.so .
 ln -s $pal_sdk_dir/lib/libPAL_DE.so 
 ln -s $pal_sdk_dir/lib/libPAL_SSD.so 
 cd ../..
+
+mkdir -p ~/local/etc/dreamvu
+cp -p ./etc/dreamvu/SavedPalProperties.txt ~/.local/etc/dreamvu/
