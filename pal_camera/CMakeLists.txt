@@ -46,6 +46,7 @@ foreach(version $AVAILABLE_ROS_VERSIONS})
 endforeach()
 
 set(PAL_LIBS  libPAL.so libPAL_CAMERA.so libPAL_DEPTH.so)
+set(OPENCV_LIBS  libopencv_calib3d.so.3.4 libopencv_core.so.3.4 libopencv_features2d.so.3.4 libopencv_flann.so.3.4 libopencv_imgcodecs.so.3.4 libopencv_imgproc.so.3.4 libopencv_videoio.so.3.4 libopencv_ximgproc.so.3.4)
 
 include_directories(
         /usr/local/include
@@ -55,6 +56,7 @@ include_directories(
 
 link_directories(
         ./lib/dreamvu
+        ./lib/opencv 
         /usr/local/lib
         ${ROS_LIBRARY_PATH}
         )

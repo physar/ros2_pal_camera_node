@@ -44,6 +44,7 @@ $ sudo apt install ros-foxy-rviz2
 $ sudo apt install ros-foxy-image-transport
 $ sudo apt install ros-foxy-camera-info-manager
 $ sudo apt install ros-foxy-image-view
+$ sudo apt install ros-foxy-v4l2-camera
 ```
 * [Colcon build system](https://docs.ros.org/en/foxy/Tutorials/Colcon-Tutorial.html)
 ```bash
