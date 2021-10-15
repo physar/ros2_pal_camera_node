@@ -63,9 +63,10 @@ link_directories(
 
 link_libraries(
         ${PAL_LIBS}
+        ${OPENCV_LIBS}
         )
 
-target_link_libraries(
+target_link_libraries(pal_camera
         ${PAL_LIBS}
         ${OPENCV_LIBS}
         )

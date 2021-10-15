@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 cd ./lib/opencv 
 ln -s libopencv_calib3d.so.3.4.4 libopencv_calib3d.so.3.4
