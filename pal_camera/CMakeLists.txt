@@ -66,10 +66,10 @@ link_libraries(
         ${OPENCV_LIBS}
         )
 
-target_link_libraries(pal_camera
-        ${PAL_LIBS}
-        ${OPENCV_LIBS}
-        )
+#target_link_libraries(pal_camera
+#        ${PAL_LIBS}
+#        ${OPENCV_LIBS}
+#        )
 
 add_executable(capture src/pal_camera_capture.cpp src/pal_camera_node.cpp)
 ament_target_dependencies(capture rclcpp std_msgs cv_bridge image_transport camera_info_manager ${DEPENDENCIES} )
