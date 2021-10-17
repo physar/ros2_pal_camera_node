@@ -79,10 +79,12 @@ REBOOT
 
 ```bash
 $ unzip PUM*.zip
-$ source PUM*/setup.sh
+$ cd PUM*/
+$ source setup.sh
+$ cd ..
 ```
 
-*Note that not the complete installation procedure of the PAL USB SDK have to be followed, unzipping is enough for this ros2 package*.
+*Note that not the complete installation procedure of the PAL USB SDK have to be followed, the three steps described above are enough for this ros2 package*.
 
 ## Build the package
 
