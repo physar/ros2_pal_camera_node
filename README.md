@@ -68,11 +68,19 @@ $ sudo apt install python3-colcon-common-extensions
 ```bash
 $ unzip PAL-Firmware-v1.2-Intel-CPU.zip
 $ cd PAL-Firmware-v1.2-Intel-CPU/installations/
+$ cd camera_data
+$ source setup_python_lib.sh
+$ cd ..
 $ sudo ./PAL_udev.sh
 REBOOT
 ```
 > After unzipping the SDK, remember this directory location as PAK_SDK_DIR for the script that has to be executed during the Build
-* Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package).
+* Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package, this package is especially made for your camera).
+
+```bash
+$ unzip PUM*.zip
+$ source PUM*/setup.sh
+```
 
 *Note that not the complete installation procedure of the PAL USB SDK have to be followed, unzipping is enough for this ros2 package*.
 
