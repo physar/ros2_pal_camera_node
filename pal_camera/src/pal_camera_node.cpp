@@ -387,7 +387,8 @@ void PalCameraNode::grab_loop()
      }
      if(ack != PAL::SUCCESS)
      {
-         RCLCPP_WARN(get_logger(), "Not able to grab a first frame from the  PAL camera");
+         RCLCPP_WARN(get_logger(), "Not able to grab a frame from the  PAL camera");
+         continue; // don't publish
      }
      else
      {
