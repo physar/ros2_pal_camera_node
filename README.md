@@ -14,6 +14,18 @@ This package lets you use the PAL camera with ROS2. It will provide access to th
 * Depth data
 * Colored 3D point-cloud
 
+<img src="https://staff.fnwi.uva.nl/a.visser/research/roboresc/2021/robolab/left.jpg"
+     alt="Left image"
+     style="float: left; margin-right: 10px;" width=200/>
+<img src="https://staff.fnwi.uva.nl/a.visser/research/roboresc/2021/robolab/right.jpg"
+     alt="Right image"
+     style="float: left; margin-right: 10px;" width=200/>
+ <img src="https://staff.fnwi.uva.nl/a.visser/research/roboresc/2021/robolab/depth.jpg"
+     alt="Depth image"
+     style="float: left; margin-right: 10px;" width=200/><br>
+ <img src="https://staff.fnwi.uva.nl/a.visser/research/roboresc/2021/robolab/rviz2_main_window.png"
+     alt="Point Cloud"
+     style="float: left; margin-right: 10px;" width=615/>
 ## Known issues
 
 The published 3D point-cloud seems to requires a computer with a GPU, to allow rviz2 to visualize the point cloud.
@@ -68,13 +80,23 @@ $ sudo apt install python3-colcon-common-extensions
 ```bash
 $ unzip PAL-Firmware-v1.2-Intel-CPU.zip
 $ cd PAL-Firmware-v1.2-Intel-CPU/installations/
+$ cd camera_data
+$ source setup_python_lib.sh
+$ cd ..
 $ sudo ./PAL_udev.sh
 REBOOT
 ```
 > After unzipping the SDK, remember this directory location as PAK_SDK_DIR for the script that has to be executed during the Build
-* Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package).
+* Calibration package for the DreamVU camera with your serial number (contact DreamVU support for this package, this package is especially made for your camera).
 
-*Note that not the complete installation procedure of the PAL USB SDK have to be followed, unzipping is enough for this ros2 package*.
+```bash
+$ unzip PUM*.zip
+$ cd PUM*/
+$ source setup.sh
+$ cd ..
+```
+
+*Note that not the complete installation procedure of the PAL USB SDK have to be followed, the three steps described above are enough for this ros2 package*.
 
 ## Build the package
 
