@@ -499,7 +499,7 @@ void PalCameraNode::grab_loop()
           mPubCloud->publish(pointcloudMsg);
       }
 
-      RCLCPP_INFO(get_logger(), "End of Grab loop");
+      RCLCPP_INFO_ONCE(get_logger(), "End of first Grab loop");
 
   } while( rclcpp::ok() ); // end of while(1)
 
