@@ -78,7 +78,7 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
   , mVideoQos(1)
 {
   RCLCPP_INFO(get_logger(), "********************************");
-  RCLCPP_INFO(get_logger(), "      DreamVU PAL Camera v1.1.9     ");
+  RCLCPP_INFO(get_logger(), "     DreamVU PAL Camera v1.1.9.1");
   RCLCPP_INFO(get_logger(), "********************************");
   RCLCPP_INFO(get_logger(), " * namespace: %s", get_namespace());
   RCLCPP_INFO(get_logger(), " * node name: %s", get_name());

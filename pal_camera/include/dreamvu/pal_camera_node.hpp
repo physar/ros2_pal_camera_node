@@ -83,7 +83,9 @@ protected:
                        std::string leftFrameId, std::string rightFrameId,
                        float baseline = 0.04);
 
+    void publishPalCameraMounting2BaseTransform(rclcpp::Time t);
     void publishBase2PalCameraTransform(rclcpp::Time t);
+    void publishMap2BaseTransform(rclcpp::Time t);
 
 private:
 
