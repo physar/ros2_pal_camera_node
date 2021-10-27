@@ -78,7 +78,7 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
   , mVideoQos(1)
 {
   RCLCPP_INFO(get_logger(), "********************************");
-  RCLCPP_INFO(get_logger(), "     DreamVU PAL Camera v1.1.9.2");
+  RCLCPP_INFO(get_logger(), "     DreamVU PAL Camera v1.2.0.0");
   RCLCPP_INFO(get_logger(), "********************************");
   RCLCPP_INFO(get_logger(), " * namespace: %s", get_namespace());
   RCLCPP_INFO(get_logger(), " * node name: %s", get_name());
@@ -154,9 +154,9 @@ bool PalCameraNode::startCamera()
   // initListeners();
 
   rclcpp::Time timeStamp = get_clock()->now();
-  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from camera center to camera mounting");
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from camera mounting to camera center");
   publishPalCameraMounting2CenterTransform(timeStamp);
-  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from the camera mounting to base_link of the robot");
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from the base_link of the robot to the camera mounting");
   publishBase2PalCameraTransform(timeStamp);
 
   RCLCPP_INFO(get_logger(), "***** STARTING GRAB LOOP *****");
@@ -483,7 +483,7 @@ void PalCameraNode::grab_loop()
      // Publish all that is grabbed
      rclcpp::Time timeStamp = get_clock()->now();
 
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing updates on the transform base_link of the robot to the center of the map");
+     RCLCPP_INFO_ONCE(get_logger(), "Publishing updates on the transform the origin of the map to the camera center");
      publishMap2BaseTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
