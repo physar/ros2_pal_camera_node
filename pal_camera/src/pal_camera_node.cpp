@@ -467,7 +467,7 @@ void PalCameraNode::grab_loop()
      RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from the camera mounting to base_link of the robot");
      publishBase2PalCameraTransform(timeStamp);
      RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform base_link of the robot to the center of the map");
-     publishMap2Base(timeStamp);
+     publishMap2BaseTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
       if (leftSubnumber > 0)
