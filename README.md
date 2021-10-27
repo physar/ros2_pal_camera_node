@@ -30,7 +30,8 @@ This package lets you use the PAL camera with ROS2. It will provide access to th
 ## Known issues
 
 * The published messages require a chain of coordinate transformations from the sensor to the robot base to the map to allow rviz2 to visualize the images and point cloud.
-* The software is currently tested on one computer, more tests are on the way.
+* The software is currently tested on one computer, more tests are on the way. 
+* The node works with SDK v1.2 for Ubuntu 18.04 (18 April 2021), while you expect for ros-foxy that the version for 20.04 (15 May 2021) should be the best choice.
 
 ## Installation
 
@@ -78,7 +79,7 @@ $ sudo apt install ros-foxy-v4l2-camera
 $ sudo apt install python3-rosdep2
 $ sudo apt install python3-colcon-common-extensions
 ```
-* [PAL USB SDK](https://dreamvu.com/software/) - Tested with SDK v1.2 for Ubuntu 20.04 (15 May 2021)
+* [PAL USB SDK](https://dreamvu.com/software/) - Tested with SDK v1.2 for Ubuntu 18.04 (24 April 2021)
 ```bash
 $ unzip PAL-Firmware-v1.2-Intel-CPU.zip
 $ cd PAL-Firmware-v1.2-Intel-CPU/installations/

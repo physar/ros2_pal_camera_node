@@ -78,7 +78,7 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
   , mVideoQos(1)
 {
   RCLCPP_INFO(get_logger(), "********************************");
-  RCLCPP_INFO(get_logger(), "      DreamVU PAL Camera v1.1.8     ");
+  RCLCPP_INFO(get_logger(), "      DreamVU PAL Camera v1.1.9     ");
   RCLCPP_INFO(get_logger(), "********************************");
   RCLCPP_INFO(get_logger(), " * namespace: %s", get_namespace());
   RCLCPP_INFO(get_logger(), " * node name: %s", get_name());
@@ -363,14 +363,10 @@ void PalCameraNode::grab_loop()
 
      try
      {
-//       leftSubnumber = mPubLeft.getNumSubscribers();
-       leftSubnumber = count_subscribers(mPubLeft-get_topic_name());
-       rightSubnumber = mPubRight.getNumSubscribers();
-       depthSubnumber = mPubDepth.getNumSubscribers();
+       leftSubnumber = count_subscribers(mPubLeft.getTopic());
+       rightSubnumber = count_subscribers(mPubRight.getTopic());
+       depthSubnumber = count_subscribers(mPubDepth.getTopic());
        cloudSubnumber = count_subscribers(mPubCloud->get_topic_name());
-       if(leftSubnumber > 0) {
-          RCLCPP_INFO_ONCE(get_logger(), "There are %d subscribers for the left image from the PAL camera", leftSubnumber);
-       }
      }
      catch (...)
      {
@@ -412,7 +408,7 @@ void PalCameraNode::grab_loop()
       }
 
      // ----> Publish the right image if someone has subscribed to
-      if (rightSubnumber >= 0)
+      if (rightSubnumber > 0)
       {
           RCLCPP_INFO_ONCE(get_logger(), "Publishing a first right-image of the  PAL camera");
           cv::Mat mat_right = cv::Mat(g_imgRight.rows, g_imgRight.cols, CV_8UC3, g_imgRight.Raw.u8_data);
@@ -420,9 +416,9 @@ void PalCameraNode::grab_loop()
       }
 
      // ----> Publish the depth image if someone has subscribed to
-      if (depthSubnumber >= 0)
+      if (depthSubnumber > 0)
       {
-          RCLCPP_INFO(get_logger(), "Publishing a depth-image of the  PAL camera");
+          RCLCPP_INFO_ONCE(get_logger(), "Publishing a first depth-image of the  PAL camera");
 
           imageMsgPtr depthptr;
           depthptr.reset(new sensor_msgs::msg::Image);
