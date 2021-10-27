@@ -70,7 +70,7 @@ protected:
     bool startCamera();
 
     void initPublishers();
-    // void initListeners();
+    void initListeners();
 
     void grab_loop(); // while-loop to be stopped by CTLR-C
 
@@ -138,8 +138,8 @@ private:
     // <---- Coordination Frame IDs
 
     // ----> initialization Transform listener & broadcaster
-    // std::unique_ptr<tf2_ros::Buffer> mTfBuffer;
-    // std::shared_ptr<tf2_ros::TransformListener> mTfListener;
+    std::unique_ptr<tf2_ros::Buffer> mTfBuffer;
+    std::shared_ptr<tf2_ros::TransformListener> mTfListener;
     std::shared_ptr<tf2_ros::TransformBroadcaster> mTfBroadcaster;
     // <---- initialization Transform listener
 
