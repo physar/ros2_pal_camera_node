@@ -26,9 +26,11 @@ This package lets you use the PAL camera with ROS2. It will provide access to th
  <img src="https://staff.fnwi.uva.nl/a.visser/research/roboresc/2021/robolab/rviz2_main_window.png"
      alt="Point Cloud"
      style="float: left; margin-right: 10px;" width=615/>
+     
 ## Known issues
 
-The published 3D point-cloud seems to requires a computer with a GPU, to allow rviz2 to visualize the point cloud.
+* The published messages require a chain of coordinate transformations from the sensor to the robot base to the map to allow rviz2 to visualize the images and point cloud.
+* The software is currently tested on one computer, more tests are on the way.
 
 ## Installation
 
