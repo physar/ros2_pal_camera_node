@@ -153,6 +153,12 @@ bool PalCameraNode::startCamera()
   initListeners();
   initPublishers();
 
+  rclcpp::Time timeStamp = get_clock()->now();
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from camera center to camera mounting");
+  publishPalCameraMounting2CenterTransform(timeStamp);
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from the camera mounting to base_link of the robot");
+  publishBase2PalCameraTransform(timeStamp);
+
   RCLCPP_INFO(get_logger(), "***** STARTING GRAB LOOP *****");
   grab_loop();
 
@@ -505,10 +511,6 @@ void PalCameraNode::grab_loop()
      }
      // Publish all that is grabbed
      rclcpp::Time timeStamp = get_clock()->now();
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from camera center to camera mounting");
-     publishPalCameraMounting2CenterTransform(timeStamp);
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from the camera mounting to base_link of the robot");
-     publishBase2PalCameraTransform(timeStamp);
      RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform base_link of the robot to the center of the map");
      publishMap2BaseTransform(timeStamp);
 

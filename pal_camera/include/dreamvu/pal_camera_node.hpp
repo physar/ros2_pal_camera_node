@@ -121,6 +121,10 @@ private:
     camInfoMsgPtr mDepthCamInfoMsg;
     // <---- Camera infos
     
+   // ----> TF Transforms Flags
+    bool mCamera2BaseTransfValid = false;
+    // <---- TF Transforms Flags
+
        // ----> Coordination Frame IDs
     std::string mMapFrameId = "map"; // three default coordination frames
     std::string mOdomFrameId = "odom";
