@@ -343,8 +343,8 @@ void PalCameraNode::publishPalCameraMounting2CenterTransform(rclcpp::Time stamp)
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = "pal_camera_center";
-     transformStamped->child_frame_id = "pal_mounting_link";
+     transformStamped->header.frame_id = "pal_mounting_link";
+     transformStamped->child_frame_id = "pal_camera_center";
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -375,8 +375,8 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = "pal_mounting_link";
-     transformStamped->child_frame_id = "base_link";
+     transformStamped->header.frame_id = "base_link";
+     transformStamped->child_frame_id = "pal_mounting_link";
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -408,8 +408,8 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = "base_link";
-     transformStamped->child_frame_id = "map";
+     transformStamped->header.frame_id = "map";
+     transformStamped->child_frame_id = "base_link";
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
