@@ -411,7 +411,7 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
                            "map", mCameraCenterFrameId.c_str());
       RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Normally the tf-chain from from '%s' to '%s' is published by the robot.",
                            "map", "base_link");
-      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Now the sensor will publish this transformation!);
+      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Now the sensor will publish this transformation!");
 
 
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
