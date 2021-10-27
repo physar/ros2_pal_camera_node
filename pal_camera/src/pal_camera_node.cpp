@@ -159,6 +159,19 @@ bool PalCameraNode::startCamera()
 }
   
 /**
+ * the PAL camera also listens, for instance to checks if there 
+   a coordination transformation between the base_link of the robot 
+   and the center of the map.
+ **/
+void PalCameraNode::initListeners()
+{
+
+  RCLCPP_INFO(get_logger(), "*** LISTENING to TF messages ***");
+
+  mTfBuffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+  mTfListener = std::make_shared<tf2_ros::TransformListener>(*mTfBuffer);
+}
+/**
  * the PAL camera can publish panoramic images, depth images and point clouds
  **/
 void PalCameraNode::initPublishers()
@@ -199,7 +212,7 @@ void PalCameraNode::initPublishers()
   mLeftCamInfoMsg = std::make_shared<sensor_msgs::msg::CameraInfo>();
   mRightCamInfoMsg = std::make_shared<sensor_msgs::msg::CameraInfo>();
 
-  // left and right are the same, excpet for a 30 deg rotation
+  // left and right are the same, except for a 30 deg rotation
   defineCamInfo(mLeftCamInfoMsg, mRightCamInfoMsg, mCameraCenterFrameId, mCameraCenterFrameId);
 
   mDepthCamInfoMsg = mLeftCamInfoMsg;
@@ -383,6 +396,23 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
 
 void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 {
+     try
+  {
+    // Save the transformation
+    geometry_msgs::msg::TransformStamped m2c =
+        mTfBuffer->lookupTransform("map", mCameraCenterFrameId, TIMEZERO_SYS, rclcpp::Duration(0.1));
+  }
+  catch (tf2::TransformException& ex)
+  {
+     rclcpp::Clock steady_clock(RCL_STEADY_TIME);
+     RCLCPP_DEBUG_THROTTLE(get_logger(), steady_clock, 1.0, "Transform error: %s", ex.what());
+      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "The tf from '%s' to '%s' is not available.",
+                           "map", mCameraCenterFrameId.c_str());
+      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Normally the tf-chain from from '%s' to '%s' is published by the robot.",
+                           "map", "base_link");
+      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Now the sensor will publish this transformation!);
+
+
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
@@ -407,6 +437,8 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
      transformStamped->transform.rotation.w = quat.w();
 
      mTfBroadcaster->sendTransform(*(transformStamped.get()));
+
+  } // end of catch
 }
   
   

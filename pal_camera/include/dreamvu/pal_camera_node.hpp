@@ -128,7 +128,9 @@ private:
     //std::string mPointCloudFrameId;
     // <---- Coordination Frame IDs
 
-    // ----> initialization Transform listener
+    // ----> initialization Transform listener & broadcaster
+    std::unique_ptr<tf2_ros::Buffer> mTfBuffer;
+    std::shared_ptr<tf2_ros::TransformListener> mTfListener;
     std::shared_ptr<tf2_ros::TransformBroadcaster> mTfBroadcaster;
     // <---- initialization Transform listener
 
