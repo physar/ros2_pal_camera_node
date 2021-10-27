@@ -167,4 +167,8 @@ Add in this view an Image (for the topics ```/dreamvu/pal/get/left```, ```/dream
 
 
 
+# Troubleshooting
 
+* If your PAL camera is not connected to a USB 3.1, it is not visible with <tt>lsusb | grep See3CAM</tt>. Use in that case a faster USB port.
+
+* If you are using the 20.04 version of the USB, you will encounter an PAL_MIDAS::Init() assertion. Use the 18.04 version of the software, by running the logic_link script again.
