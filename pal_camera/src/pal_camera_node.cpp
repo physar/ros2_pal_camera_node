@@ -400,7 +400,7 @@ void PalCameraNode::grab_loop()
      publishBase2PalCameraTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
-      if (leftSubnumber > 0)
+      if (leftSubnumber >= 0)
       {
           RCLCPP_INFO_ONCE(get_logger(), "Publishing first left-image of the  PAL camera");
           cv::Mat mat_left = cv::Mat(g_imgLeft.rows, g_imgLeft.cols, CV_8UC3, g_imgLeft.Raw.u8_data);
