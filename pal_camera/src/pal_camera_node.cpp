@@ -150,14 +150,16 @@ bool PalCameraNode::startCamera()
 
   RCLCPP_INFO(get_logger(), "Current resolution set to width x height: %d x %d", mCamWidth, mCamHeight);
 
-  initListeners();
   initPublishers();
+  // initListeners();
 
   rclcpp::Time timeStamp = get_clock()->now();
   RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from camera center to camera mounting");
   publishPalCameraMounting2CenterTransform(timeStamp);
-  RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from the camera mounting to base_link of the robot");
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from the camera mounting to base_link of the robot");
   publishBase2PalCameraTransform(timeStamp);
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform base_link of the robot to the center of the map");
+  publishMap2BaseTransform(timeStamp);
 
   RCLCPP_INFO(get_logger(), "***** STARTING GRAB LOOP *****");
   grab_loop();
@@ -403,34 +405,6 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
 
 void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 {
-  mCamera2BaseTransfValid = false;
-  static bool first_error = true;
-  try
-  {
-    // Save the transformation
-    geometry_msgs::msg::TransformStamped m2c =
-        mTfBuffer->lookupTransform("map", mCameraCenterFrameId, TIMEZERO_SYS, rclcpp::Duration(0.1));
-    mCamera2BaseTransfValid = true;
-  }
-  catch (tf2::TransformException& ex)
-  {
-     if (!first_error)
-    {
-
-     rclcpp::Clock steady_clock(RCL_STEADY_TIME);
-     RCLCPP_DEBUG_THROTTLE(get_logger(), steady_clock, 1.0, "Transform error: %s", ex.what());
-      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "The tf from '%s' to '%s' is not available.",
-                           "map", mCameraCenterFrameId.c_str());
-      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Normally the tf-chain from from '%s' to '%s' is published by the robot.",
-                           "map", "base_link");
-      RCLCPP_WARN_THROTTLE(get_logger(), steady_clock, 1.0, "Now the sensor will publish this transformation!");
-      first_error = false;
-    }
-    
-  } // end of catch
-
-  if ( mCamera2BaseTransfValid == false )
-  {
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
@@ -455,7 +429,6 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
      transformStamped->transform.rotation.w = quat.w();
 
      mTfBroadcaster->sendTransform(*(transformStamped.get()));
-  }
 }
   
   
@@ -511,8 +484,6 @@ void PalCameraNode::grab_loop()
      }
      // Publish all that is grabbed
      rclcpp::Time timeStamp = get_clock()->now();
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform base_link of the robot to the center of the map");
-     publishMap2BaseTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
       if (leftSubnumber > 0)
