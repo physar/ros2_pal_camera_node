@@ -407,7 +407,7 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 
      transformStamped->header.stamp = stamp;
      transformStamped->header.frame_id = "map";
-     transformStamped->child_frame_id = "base_link";
+     transformStamped->child_frame_id = "pal_camera_center";
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
