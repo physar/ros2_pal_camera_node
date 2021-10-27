@@ -313,6 +313,38 @@ void PalCameraNode::publishImageWithInfo(cv::Mat& imgmat, image_transport::Camer
 }
 
 /**
+ * Define the transformation between the center of the camera and the mounting plate of the sensor (6cm difference).
+ **/
+
+void PalCameraNode::publishPalCameraMounting2CenterTransform(rclcpp::Time stamp)
+{
+     transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
+
+     transformStamped->header.stamp = stamp;
+     transformStamped->header.frame_id = "pal_camera_center";
+     transformStamped->child_frame_id = "pal_mounting_link";
+
+     // At the moment, message filled by a tranformation defaulted to Identity()
+     // TBF, inspired by line 3828 of zed_camera_component
+
+     tf2::Transform mPalCameraMounting2CenterTransf; // Coordinates of the camera frame in base frame
+
+     mPalCameraMounting2CenterTransf.setIdentity();
+     tf2::Vector3 translation = mPalCameraMounting2CenterTransf.getOrigin();
+     tf2::Quaternion quat = mPalCameraMounting2CenterTransf.getRotation();
+
+     transformStamped->transform.translation.x = translation.x();
+     transformStamped->transform.translation.y = translation.y();
+     transformStamped->transform.translation.z = translation.z() + 0.06;
+     transformStamped->transform.rotation.x = quat.x();
+     transformStamped->transform.rotation.y = quat.y();
+     transformStamped->transform.rotation.z = quat.z();
+     transformStamped->transform.rotation.w = quat.w();
+
+     mTfBroadcaster->sendTransform(*(transformStamped.get()));
+}
+  
+/**
  * Define the transformation between the mounting point of the camera and the base of the robot.
  **/
 
@@ -343,6 +375,40 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
 
      mTfBroadcaster->sendTransform(*(transformStamped.get()));
 }
+
+/**
+ * Define the transformation between the base of the robot and the center of the map. Only needed for rviz2 when the PAL camera is not mounted on a robot.
+ Assume in that case that the camera is on a table of 1m height.
+ **/
+
+void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
+{
+     transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
+
+     transformStamped->header.stamp = stamp;
+     transformStamped->header.frame_id = "base_link";
+     transformStamped->child_frame_id = "map";
+
+     // At the moment, message filled by a tranformation defaulted to Identity()
+     // TBF, inspired by line 3828 of zed_camera_component
+
+     tf2::Transform mMap2BaseTransf; // Coordinates of the camera frame in base frame
+
+     mMap2BaseTransf.setIdentity();
+     tf2::Vector3 translation = mMap2BaseTransf.getOrigin();
+     tf2::Quaternion quat = mMap2BaseTransf.getRotation();
+
+     transformStamped->transform.translation.x = translation.x();
+     transformStamped->transform.translation.y = translation.y();
+     transformStamped->transform.translation.z = translation.z() + 1.0;
+     transformStamped->transform.rotation.x = quat.x();
+     transformStamped->transform.rotation.y = quat.y();
+     transformStamped->transform.rotation.z = quat.z();
+     transformStamped->transform.rotation.w = quat.w();
+
+     mTfBroadcaster->sendTransform(*(transformStamped.get()));
+}
+  
   
 /**
  * The main loop of this sensor node
@@ -396,8 +462,12 @@ void PalCameraNode::grab_loop()
      }
      // Publish all that is grabbed
      rclcpp::Time timeStamp = get_clock()->now();
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform to base_link");
+     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from camera center to camera mounting");
+     publishPalCameraMounting2CenterTransform(timeStamp);
+     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform from the camera mounting to base_link of the robot");
      publishBase2PalCameraTransform(timeStamp);
+     RCLCPP_INFO_ONCE(get_logger(), "Publishing a transform base_link of the robot to the center of the map");
+     publishMap2Base(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
       if (leftSubnumber > 0)
