@@ -31,6 +31,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <image_transport/image_transport.hpp>
@@ -53,6 +55,8 @@ typedef std::shared_ptr<geometry_msgs::msg::TransformStamped> transfMsgPtr;
 
 // <---- Typedefs to simplify declarations
 
+#define TIMEZERO_SYS rclcpp::Time(0,0,RCL_SYSTEM_TIME)
+
 class PalCameraNode : public rclcpp::Node
 {
 public:
@@ -66,6 +70,7 @@ protected:
     bool startCamera();
 
     void initPublishers();
+    void initListeners();
 
     void grab_loop(); // while-loop to be stopped by CTLR-C
 
