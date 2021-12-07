@@ -114,7 +114,7 @@ $ cd ../../..
 $ sudo apt-get update
 $ rosdep update
 $ rosdep install --from-paths src --ignore-src -r -y
-$ colcon build --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
+$ colcon build --packages-select pal_camera --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
 $ source $(pwd)/install/local_setup.bash
 ```
 
