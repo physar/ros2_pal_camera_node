@@ -84,6 +84,8 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
   RCLCPP_INFO(get_logger(), " * node name: %s", get_name());
   RCLCPP_INFO(get_logger(), "********************************");
 
+  initParameters();
+
   if (startCamera() != true)
   {
     RCLCPP_ERROR(get_logger(), "Failed to start pal-camera node");
@@ -178,6 +180,45 @@ void PalCameraNode::initListeners()
   mTfBuffer = std::make_unique<tf2_ros::Buffer>(this->get_clock());
   mTfListener = std::make_shared<tf2_ros::TransformListener>(*mTfBuffer);
 }
+
+/**
+ * Utility function
+ **/
+template <typename T>
+void PalCameraNode::getParam(std::string paramName, T defValue, T& outVal, std::string log_info)
+{
+  declare_parameter(paramName, rclcpp::ParameterValue(defValue));
+
+  if (!get_parameter(paramName, outVal))
+  {
+    RCLCPP_WARN_STREAM(get_logger(), "The parameter '"
+                                         << paramName << "' is not available or is not valid, using the default value: "
+                                         << defValue);
+  }
+
+  if (!log_info.empty())
+  {
+    RCLCPP_INFO_STREAM(get_logger(), log_info << outVal);
+  }
+}
+
+/**
+ * ROS2 relies on parameters to configure its nodes. 
+ * For instance, setting a camera_name allows run more than one PAL camera
+ **/
+void PalCameraNode::initParameters()
+{
+  //rclcpp::Parameter paramVal;
+  //std::string paramName;
+
+  // The default values of mCamera are already initialized in pal_camera_node.hpp
+
+  RCLCPP_INFO(get_logger(), "*** GENERAL parameters ***");
+
+  getParam("general.camera_model", mCameraModel, mCameraModel, " * Camera model: ");
+  getParam("general.camera_name", mCameraName, mCameraName, " * Camera name: ");
+}
+
 /**
  * the PAL camera can publish panoramic images, depth images and point clouds
  **/
@@ -186,15 +227,18 @@ void PalCameraNode::initPublishers()
 
   RCLCPP_INFO(get_logger(), "*** PUBLISHED TOPICS ***");
 
-  std::string topicPrefix = "/dreamvu/";
-  topicPrefix += "pal/";
+  //std::string topicPrefix = "/dreamvu/";
+  //topicPrefix += "pal/";
+
+  std::string topicPrefix = mCameraName; // allows Multiple cameras
 
   // The format as published by the ROS1 node "/dreamvu/pal/get/left";
 
-  std::string left_topic = "/dreamvu/pal/get/left";
+  std::string leftTopicRoot  =  "left";
   std::string rightTopicRoot = "right";
   std::string depthTopicRoot = "depth";
   std::string cloudTopicRoot = "point_cloud";
+  std::string left_topic  = topicPrefix + "get/" +  leftTopicRoot;
   std::string right_topic = topicPrefix + "get/" + rightTopicRoot;
   std::string depth_topic = topicPrefix + "get/" + depthTopicRoot;
   std::string cloud_topic = topicPrefix + "get/" + cloudTopicRoot;
@@ -220,7 +264,7 @@ void PalCameraNode::initPublishers()
   mRightCamInfoMsg = std::make_shared<sensor_msgs::msg::CameraInfo>();
 
   // left and right are the same, except for a 30 deg rotation
-  defineCamInfo(mLeftCamInfoMsg, mRightCamInfoMsg, mCameraCenterFrameId, mCameraCenterFrameId);
+  defineCamInfo(mLeftCamInfoMsg, mRightCamInfoMsg, mCameraName + mCameraCenterFrameId, mCameraName + mCameraCenterFrameId);
 
   mDepthCamInfoMsg = mLeftCamInfoMsg;
 
@@ -341,8 +385,8 @@ void PalCameraNode::publishPalCameraMounting2CenterTransform(rclcpp::Time stamp)
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = "pal_mounting_link";
-     transformStamped->child_frame_id = "pal_camera_center";
+     transformStamped->header.frame_id = mCameraName + mMountingBottomFrameId;
+     transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -374,7 +418,7 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
 
      transformStamped->header.stamp = stamp;
      transformStamped->header.frame_id = "base_link";
-     transformStamped->child_frame_id = "pal_mounting_link";
+     transformStamped->child_frame_id = mCameraName + mMountingBottomFrameId;
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -407,7 +451,7 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 
      transformStamped->header.stamp = stamp;
      transformStamped->header.frame_id = "map";
-     transformStamped->child_frame_id = "pal_camera_center";
+     transformStamped->child_frame_id = "base_link";
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -420,7 +464,7 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 
      transformStamped->transform.translation.x = translation.x();
      transformStamped->transform.translation.y = translation.y();
-     transformStamped->transform.translation.z = translation.z() + 1.0;
+     transformStamped->transform.translation.z = translation.z() + 0.0;
      transformStamped->transform.rotation.x = quat.x();
      transformStamped->transform.rotation.y = quat.y();
      transformStamped->transform.rotation.z = quat.z();
@@ -491,7 +535,7 @@ void PalCameraNode::grab_loop()
       {
           RCLCPP_INFO_ONCE(get_logger(), "Publishing first left-image of the  PAL camera");
           cv::Mat mat_left = cv::Mat(g_imgLeft.rows, g_imgLeft.cols, CV_8UC3, g_imgLeft.Raw.u8_data);
-          publishImageWithInfo(mat_left, mPubLeft, mLeftCamInfoMsg, mCameraCenterFrameId, timeStamp); // should rotate 90 deg to get image coordinates
+          publishImageWithInfo(mat_left, mPubLeft, mLeftCamInfoMsg, mCameraName + mCameraCenterFrameId, timeStamp); // should rotate 90 deg to get image coordinates
       }
 
      // ----> Publish the right image if someone has subscribed to
@@ -499,7 +543,7 @@ void PalCameraNode::grab_loop()
       {
           RCLCPP_INFO_ONCE(get_logger(), "Publishing a first right-image of the  PAL camera");
           cv::Mat mat_right = cv::Mat(g_imgRight.rows, g_imgRight.cols, CV_8UC3, g_imgRight.Raw.u8_data);
-          publishImageWithInfo(mat_right, mPubRight, mRightCamInfoMsg, mCameraCenterFrameId, timeStamp); // should add an additional 30 deg around the z-axis
+          publishImageWithInfo(mat_right, mPubRight, mRightCamInfoMsg, mCameraName + mCameraCenterFrameId, timeStamp); // should add an additional 30 deg around the z-axis
       }
 
      // ----> Publish the depth image if someone has subscribed to
@@ -511,7 +555,7 @@ void PalCameraNode::grab_loop()
           depthptr.reset(new sensor_msgs::msg::Image);
 
           depthptr->header.stamp = timeStamp;
-          depthptr->header.frame_id = mCameraCenterFrameId;
+          depthptr->header.frame_id = mCameraName + mCameraCenterFrameId;
 
           depthptr->height = g_imgDepth.rows;
           depthptr->width = g_imgDepth.cols;
@@ -546,7 +590,7 @@ void PalCameraNode::grab_loop()
           sensor_msgs::msg::PointCloud2 pointcloudMsg;
 
           pointcloudMsg.header.stamp = timeStamp;
-          pointcloudMsg.header.frame_id = mCameraCenterFrameId;
+          pointcloudMsg.header.frame_id = mCameraName + mCameraCenterFrameId;
 
           pointcloudMsg.is_bigendian = false;
           pointcloudMsg.is_dense = false;

@@ -55,6 +55,7 @@ include_directories(
         )
 
 link_directories(
+        ./lib
         ./lib/dreamvu
         ./lib/opencv 
         /usr/local/lib
@@ -66,17 +67,26 @@ link_libraries(
         ${OPENCV_LIBS}
         )
 
-#target_link_libraries(pal_camera
-#        ${PAL_LIBS}
-#        ${OPENCV_LIBS}
-#        )
 
 add_executable(capture src/pal_camera_capture.cpp src/pal_camera_node.cpp)
 ament_target_dependencies(capture rclcpp std_msgs cv_bridge image_transport camera_info_manager ${DEPENDENCIES} )
+target_link_libraries(capture ${PAL_LIBS})
 
-install(TARGETS
-        capture
-        DESTINATION lib/${PROJECT_NAME})
+target_link_libraries(capture
+        ${PAL_LIBS}
+        ${OPENCV_LIBS}
+        )
+
+install(
+   TARGETS capture 
+   RUNTIME DESTINATION lib/${PROJECT_NAME}                
+#   LIBRARY DESTINATION lib/${PROJECT_NAME}                
+)
+
+install(DIRECTORY
+  lib  
+  DESTINATION .
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -89,5 +99,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_include_directories(include)
 ament_export_libraries(pal_camera)
+ament_export_dependencies(${DEPENDENCIES})
 ament_package()

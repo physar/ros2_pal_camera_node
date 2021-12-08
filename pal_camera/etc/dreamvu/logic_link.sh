@@ -8,13 +8,13 @@ ln -sf $pal_sdk_dir/include/PAL_Image.h .
 ln -sf $pal_sdk_dir/include/PAL_CameraProperties.h .
 cd ../..
 
-cd ./lib/dreamvu
+cd ./lib
 ln -sf $pal_sdk_dir/lib/libPAL.so .
 ln -sf $pal_sdk_dir/lib/libPAL_CAMERA.so .
 ln -sf $pal_sdk_dir/lib/libPAL_DEPTH.so .
 ln -sf $pal_sdk_dir/lib/libPAL_DE.so 
 ln -sf $pal_sdk_dir/lib/libPAL_SSD.so 
-cd ../..
+cd ..
 
 mkdir -p ~/local/etc/dreamvu
 cp -p ./etc/dreamvu/SavedPalProperties.txt ~/.local/etc/dreamvu/

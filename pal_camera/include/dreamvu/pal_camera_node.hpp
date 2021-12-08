@@ -69,6 +69,7 @@ protected:
 
     bool startCamera();
 
+    void initParameters();
     void initPublishers();
     void initListeners();
 
@@ -94,12 +95,23 @@ protected:
 
 private:
 
+    // ----> Utility functions
+    template<typename T>
+    void getParam(std::string paramName, T defValue, T& outVal, std::string log_info=std::string());
+    // <---- Utility functions
+
     // ----> pal-camera initialization Info
     int mCamWidth;  // Camera frame width
     int mCamHeight; // Camera frame height
     PAL::CameraProperties mCameraProperties;
     // <---- pal-camera initialization Info
 
+    // ----> Parameter variables
+    std::string mCameraModel = "pal_usb";
+    std::string mCameraName = "/dreamvu/pal/";
+    // <---- Parameter variables
+
+ 
     // ----> Variables initiated during Class creation
     rclcpp::QoS mVideoQos;
     // <---- Variables initiated during Class creation
@@ -130,7 +142,8 @@ private:
     std::string mOdomFrameId = "odom";
     std::string mBaseFrameId = "base_link";
 
-    std::string mCameraCenterFrameId = "pal_camera_center";
+    std::string mCameraCenterFrameId = "camera_center";
+    std::string mMountingBottomFrameId = "mounting_bottom";
     //std::string mLeftCamFrameId;
     //std::string mRightCamFrameId;
     //std::string mDepthFrameId;
