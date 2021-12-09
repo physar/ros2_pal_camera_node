@@ -83,9 +83,13 @@ install(
 #   LIBRARY DESTINATION lib/${PROJECT_NAME}                
 )
 
-install(DIRECTORY
-  lib  
-  DESTINATION .
+foreach(dir launch)
+        install(DIRECTORY ${dir}/
+                DESTINATION share/${PROJECT_NAME}/${dir})
+endforeach(dir)
+
+install(DIRECTORY lib
+        DESTINATION .
 )
 
 if(BUILD_TESTING)

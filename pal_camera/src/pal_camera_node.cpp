@@ -156,10 +156,8 @@ bool PalCameraNode::startCamera()
   // initListeners();
 
   rclcpp::Time timeStamp = get_clock()->now();
-  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from camera mounting to camera center");
-  publishPalCameraMounting2CenterTransform(timeStamp);
-  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from the base_link of the robot to the camera mounting");
-  publishBase2PalCameraTransform(timeStamp);
+  RCLCPP_INFO_ONCE(get_logger(), "Publishing a static transform from base_link to camera center");
+  publishBase2PalCameraCenterTransform(timeStamp);
 
   RCLCPP_INFO(get_logger(), "***** STARTING GRAB LOOP *****");
   grab_loop();
@@ -217,6 +215,12 @@ void PalCameraNode::initParameters()
 
   getParam("general.camera_model", mCameraModel, mCameraModel, " * Camera model: ");
   getParam("general.camera_name", mCameraName, mCameraName, " * Camera name: ");
+  getParam("general.cam_pos_x", mCameraPosX, mCameraPosX, " * Camera position x: ");
+  getParam("general.cam_pos_y", mCameraPosY, mCameraPosY, " * Camera position y: ");
+  getParam("general.cam_pos_z", mCameraPosZ, mCameraPosZ, " * Camera position z: ");
+  getParam("general.cam_roll", mCameraRoll, mCameraRoll, " * Camera orientation roll: ");
+  getParam("general.cam_pitch", mCameraPitch, mCameraPitch, " * Camera orientation pitch: ");
+  getParam("general.cam_yaw", mCameraYaw, mCameraYaw, " * Camera orientation yaw: ");
 }
 
 /**
@@ -377,48 +381,16 @@ void PalCameraNode::publishImageWithInfo(cv::Mat& imgmat, image_transport::Camer
 }
 
 /**
- * Define the transformation between the center of the camera and the mounting plate of the sensor (6cm difference).
+ * Define the transformation between the center of the camera and the base of the robot.
  **/
 
-void PalCameraNode::publishPalCameraMounting2CenterTransform(rclcpp::Time stamp)
-{
-     transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
-
-     transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = mCameraName + mMountingBottomFrameId;
-     transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
-
-     // At the moment, message filled by a tranformation defaulted to Identity()
-     // TBF, inspired by line 3828 of zed_camera_component
-
-     tf2::Transform mPalCameraMounting2CenterTransf; // Coordinates of the camera frame in base frame
-
-     mPalCameraMounting2CenterTransf.setIdentity();
-     tf2::Vector3 translation = mPalCameraMounting2CenterTransf.getOrigin();
-     tf2::Quaternion quat = mPalCameraMounting2CenterTransf.getRotation();
-
-     transformStamped->transform.translation.x = translation.x();
-     transformStamped->transform.translation.y = translation.y();
-     transformStamped->transform.translation.z = translation.z() + 0.06;
-     transformStamped->transform.rotation.x = quat.x();
-     transformStamped->transform.rotation.y = quat.y();
-     transformStamped->transform.rotation.z = quat.z();
-     transformStamped->transform.rotation.w = quat.w();
-
-     mTfBroadcaster->sendTransform(*(transformStamped.get()));
-}
-  
-/**
- * Define the transformation between the mounting point of the camera and the base of the robot.
- **/
-
-void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
+void PalCameraNode::publishBase2PalCameraCenterTransform(rclcpp::Time stamp)
 {
      transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
 
      transformStamped->header.stamp = stamp;
      transformStamped->header.frame_id = "base_link";
-     transformStamped->child_frame_id = mCameraName + mMountingBottomFrameId;
+     transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -428,6 +400,8 @@ void PalCameraNode::publishBase2PalCameraTransform(rclcpp::Time stamp)
      mBase2PalCameraTransf.setIdentity();
      tf2::Vector3 translation = mBase2PalCameraTransf.getOrigin();
      tf2::Quaternion quat = mBase2PalCameraTransf.getRotation();
+     translation.setValue(mCameraPosX, mCameraPosY, mCameraPosZ);
+     quat.setRPY(mCameraRoll,mCameraPitch,mCameraYaw);
 
      transformStamped->transform.translation.x = translation.x();
      transformStamped->transform.translation.y = translation.y();

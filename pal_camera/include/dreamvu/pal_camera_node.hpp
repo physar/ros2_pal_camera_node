@@ -89,8 +89,7 @@ protected:
                        std::string leftFrameId, std::string rightFrameId,
                        float baseline = 0.04);
 
-    void publishPalCameraMounting2CenterTransform(rclcpp::Time t);
-    void publishBase2PalCameraTransform(rclcpp::Time t);
+    void publishBase2PalCameraCenterTransform(rclcpp::Time t);
     void publishMap2BaseTransform(rclcpp::Time t);
 
 private:
@@ -109,6 +108,12 @@ private:
     // ----> Parameter variables
     std::string mCameraModel = "pal_usb";
     std::string mCameraName = "/dreamvu/pal/";
+    double mCameraPosX = 0.0;
+    double mCameraPosY = 0.0;
+    double mCameraPosZ = 0.06; // camera_center is 6cm above bottom
+    double mCameraRoll = 0.0;
+    double mCameraPitch = 0.0;
+    double mCameraYaw = 0.0;
     // <---- Parameter variables
 
  
