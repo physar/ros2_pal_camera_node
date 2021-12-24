@@ -15,6 +15,7 @@ def generate_launch_description():
 
     package_dir = get_package_share_directory('pal_camera')
 
+
     camera_name = LaunchConfiguration('camera_name')
     camera_model = LaunchConfiguration('camera_model')
 
@@ -25,8 +26,21 @@ def generate_launch_description():
     cam_pitch = LaunchConfiguration('cam_pitch')
     cam_yaw = LaunchConfiguration('cam_yaw')
 
+
     default_camera_model = 'pal_usb'
     default_camera_name  = '/dreamvu/pal/'
+
+    config_camera_path = os.path.join(
+            package_dir,
+            'config',
+            default_camera_model + '.yaml'
+        )
+
+    default_config_camera_path = os.path.join(
+            package_dir,
+            'config',
+            default_camera_model + '.yaml'
+        )
 
     declare_camera_name_cmd = DeclareLaunchArgument(
         'camera_name',
@@ -37,6 +51,11 @@ def generate_launch_description():
         'camera_model',
         default_value=default_camera_model,
         description='The model of the camera. Currently only the `pal`-model implemented based on the `pal_usb`, but the `pal_mini` and `pal_alia` have quite different dimensions and max_depth. Valid models: `pal`, `pal_usb`, `pal_mini`, `pal_alia`.')
+
+    declare_config_camera_path_cmd = DeclareLaunchArgument(
+        'config_camera_path',
+        default_value=default_config_camera_path,
+        description='Path to the `<camera_model>.yaml` file.')
 
     declare_pos_x_cmd = DeclareLaunchArgument(
         'cam_pos_x',
@@ -76,16 +95,20 @@ def generate_launch_description():
         executable='capture',
         name='pal_camera_capture',
         output='screen',
-        parameters=[{
-                    'camera_name': camera_name, 
-                    'camera_model': camera_model,
-                    'cam_pos_x': cam_pos_x,
-                    'cam_pos_y': cam_pos_y,
-                    'cam_pos_z': cam_pos_z,
-                    'cam_roll': cam_roll,
-                    'cam_pitch': cam_pitch,
-                    'cam_yaw': cam_yaw
-       }]
+        parameters=[
+            config_camera_path,
+        # Overriding
+        {
+        #            'camera_name': camera_name, 
+        #            'camera_model': camera_model,
+        #            'cam_pos_x': cam_pos_x,
+        #            'cam_pos_y': cam_pos_y,
+        #            'cam_pos_z': cam_pos_z,
+        #            'cam_roll': cam_roll,
+        #            'cam_pitch': cam_pitch,
+        #            'cam_yaw': cam_yaw
+        }
+        ]
     )
 
 # Define LaunchDescription variable and return it

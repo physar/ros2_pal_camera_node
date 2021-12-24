@@ -1,0 +1,11 @@
+# config/pal_usb_yaml
+# Parameters for DreamVu's pal camera
+---
+
+/**:
+    ros__parameters:
+
+        general:
+            camera_model:       'pal_usb'
+            camera_name:        'pal4'
+

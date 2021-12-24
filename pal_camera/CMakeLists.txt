@@ -88,6 +88,11 @@ foreach(dir launch)
                 DESTINATION share/${PROJECT_NAME}/${dir})
 endforeach(dir)
 
+foreach(dir config)
+        install(DIRECTORY ${dir}/
+                DESTINATION share/${PROJECT_NAME}/${dir})
+endforeach(dir)
+
 install(DIRECTORY lib
         DESTINATION .
 )

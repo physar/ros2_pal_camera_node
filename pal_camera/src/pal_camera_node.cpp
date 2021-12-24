@@ -86,6 +86,8 @@ PalCameraNode::PalCameraNode(const rclcpp::NodeOptions& options)
 
   initParameters();
 
+  //initServices();
+
   if (startCamera() != true)
   {
     RCLCPP_ERROR(get_logger(), "Failed to start pal-camera node");
@@ -193,6 +195,9 @@ void PalCameraNode::getParam(std::string paramName, T defValue, T& outVal, std::
                                          << paramName << "' is not available or is not valid, using the default value: "
                                          << defValue);
   }
+  RCLCPP_INFO_STREAM(get_logger(), "The parameter '"
+                                         << paramName << "' was available and set to the value: "
+                                         << outVal);
 
   if (!log_info.empty())
   {
@@ -221,6 +226,40 @@ void PalCameraNode::initParameters()
   getParam("general.cam_roll", mCameraRoll, mCameraRoll, " * Camera orientation roll: ");
   getParam("general.cam_pitch", mCameraPitch, mCameraPitch, " * Camera orientation pitch: ");
   getParam("general.cam_yaw", mCameraYaw, mCameraYaw, " * Camera orientation yaw: ");
+
+  RCLCPP_INFO(get_logger(), "*** LIST parameters ***");
+
+  auto parameters_client = std::make_shared<rclcpp::SyncParametersClient>(this);
+    while (!parameters_client->wait_for_service(1s)) {
+      if (!rclcpp::ok()) {
+        RCLCPP_ERROR(this->get_logger(), "Interrupted while waiting for the service. Exiting.");
+        rclcpp::shutdown();
+      }
+      RCLCPP_INFO(this->get_logger(), "service not available, waiting again...");
+    }
+
+  auto parameters_and_prefixes = parameters_client->list_parameters({"general"}, 10);
+
+  std::stringstream ss;
+    ss << "\nParameter names:";
+    for (auto & name : parameters_and_prefixes.names) {
+      ss << "\n " << name;
+    }
+
+  ss << "\nParameter prefixes:";
+    for (auto & prefix : parameters_and_prefixes.prefixes) {
+      ss << "\n " << prefix;
+    }
+    RCLCPP_INFO(this->get_logger(), "%s", ss.str().c_str());
+  auto my_parameter = parameters_client->list_parameters({"camera_model"}, 10);
+
+  ss << "\nMy parameter names:";
+  for (auto & name : my_parameter.names) {
+    ss << "\n " << name;
+  }
+    RCLCPP_INFO(this->get_logger(), "%s", ss.str().c_str());
+
+
 }
 
 /**

@@ -41,7 +41,8 @@ int main(int argc, char** argv)
   rclcpp::executors::SingleThreadedExecutor exec;
 
   // the options with parameters from the ROS parameter system
-  auto options = rclcpp::NodeOptions().automatically_declare_parameters_from_overrides(true);
+  //auto options = rclcpp::NodeOptions().automatically_declare_parameters_from_overrides(true);
+  rclcpp::NodeOptions options;
 
   // the pal-camera capture node
   auto capture_node = std::make_shared<dreamvu::PalCameraNode>(options);
