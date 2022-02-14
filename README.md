@@ -132,8 +132,17 @@ To start the **ros2 pal_camera_node**, open a terminal and start it with the com
 ```bash
 $ source /opt/ros/foxy/setup.bash
 $ source $~/ros2_ws/install/local_setup.bash
+$ ros2 launch pal_camera pal_camera.launch.py
+```
+
+or alternatively, in ROS1-style
+```bash
 $ ros2 run pal_camera capture
 ```
+
+The difference between the launch and the run, is that the launch loads its parameters from config/pal_usb.yaml, which allows an easy way to change the name (if you have two PAL cameras mounted on your robot) or the mounting position.
+
+The run can only be used with the default settings.
 
 # Inspect the published topics
 
@@ -174,3 +183,5 @@ Add in this view an Image (for the topics ```/dreamvu/pal/get/left```, ```/dream
 * If you are using the 20.04 version of the USB, you will encounter an PAL_MIDAS::Init() assertion. Use the 18.04 version of the software, by running the logic_link script again.
 
 * rviz2 is dropping messages. This means that your robot is not publishing any coordinate transformations from the map to the base_link. The camera images are published from the coordinate system 'pal_camera_center'.
+
+* During initialization there are many onnxruntime warnings on CleanUnusedInitializers. These is are warnings of the dreamvu driver itself, which should be ignored according to the SDK manual. Hopefully they are gone for PAL SDK versions above v1.2.

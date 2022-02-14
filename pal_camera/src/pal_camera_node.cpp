@@ -264,14 +264,11 @@ void PalCameraNode::initPublishers()
 {
 
   RCLCPP_INFO(get_logger(), "*** PUBLISHED TOPICS ***");
-  RCLCPP_INFO(get_logger(), mCameraName);
-
-  //std::string topicPrefix = "/dreamvu/";
-  //topicPrefix += "pal/";
+  RCLCPP_INFO(get_logger(), "Shared topic base: %s", mCameraName.c_str());
 
   std::string topicPrefix = mCameraName; // allows Multiple cameras
 
-  // The format as published by the ROS1 node "/dreamvu/pal/get/left";
+  // With the default CameraName "/dreamvu/pal/" the topics are published in the same format as used by the ROS1 node: "/dreamvu/pal/get/left";
 
   std::string leftTopicRoot  =  "left";
   std::string rightTopicRoot = "right";
@@ -407,8 +404,7 @@ void PalCameraNode::publishImageWithInfo(cv::Mat& imgmat, image_transport::Camer
   //auto image = sl_tools::imageToROSmsg(img, imgFrameId, t);
   sensor_msgs::msg::Image::SharedPtr imgMsg = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", imgmat).toImageMsg();
 
-  // TBC
-  RCLCPP_INFO(get_logger(), " Publishing Image with FrameId: %s", imgFrameId.c_str());
+  // RCLCPP_INFO(get_logger(), " Publishing Image with FrameId: %s", imgFrameId.c_str());
 
   imgMsg->header.stamp = t;
   imgMsg->header.frame_id = imgFrameId;
@@ -432,8 +428,7 @@ void PalCameraNode::publishBase2PalCameraCenterTransform(rclcpp::Time stamp)
      transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
      //transformStamped->child_frame_id = "camera_center";
 
-     // TBC
-     RCLCPP_INFO(get_logger(), "Publishing the transformation from %s to %s", transformStamped->header.frame_id.c_str(), transformStamped->child_frame_id.c_str());
+     // RCLCPP_INFO(get_logger(), "Publishing the transformation from %s to %s", transformStamped->header.frame_id.c_str(), transformStamped->child_frame_id.c_str());
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -493,41 +488,6 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
 }
 
 /**
- * Define the transformation between the center of the camera and the center of the map.
- **/
-
-void PalCameraNode::publishMap2PalCameraCenterTransform(rclcpp::Time stamp)
-{
-     transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
-
-     transformStamped->header.stamp = stamp;
-     transformStamped->header.frame_id = "base_link";
-     transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
-
-     RCLCPP_INFO(get_logger(), "Publishing the NEW transformation from %s to %s", transformStamped->header.frame_id.c_str(), transformStamped->child_frame_id.c_str());
-
-     // At the moment, message filled by a transformation defaulted to Identity()
-     // TBF, inspired by line 3828 of zed_camera_component
-
-     tf2::Transform mMap2BaseTransf; // Coordinates of the camera frame in base frame
-
-     mMap2BaseTransf.setIdentity();
-     tf2::Vector3 translation = mMap2BaseTransf.getOrigin();
-     tf2::Quaternion quat = mMap2BaseTransf.getRotation();
-
-     transformStamped->transform.translation.x = translation.x();
-     transformStamped->transform.translation.y = translation.y();
-     transformStamped->transform.translation.z = translation.z() + 0.0;
-     transformStamped->transform.rotation.x = quat.x();
-     transformStamped->transform.rotation.y = quat.y();
-     transformStamped->transform.rotation.z = quat.z();
-     transformStamped->transform.rotation.w = quat.w();
-
-     mTfBroadcaster->sendTransform(*(transformStamped.get()));
-}
-  
-  
-/**
  * The main loop of this sensor node
  **/
 
@@ -580,9 +540,8 @@ void PalCameraNode::grab_loop()
      // Publish all that is grabbed
      rclcpp::Time timeStamp = get_clock()->now();
 
-     RCLCPP_INFO_ONCE(get_logger(), "Publishing updates on the transform the origin of the map to the camera center");
+     RCLCPP_INFO_ONCE(get_logger(), "Publishing dynamic updates on the transform the origin of the map to the base_link of the robot, the mounting point of the camera center");
      publishMap2BaseTransform(timeStamp);
-     //publishMap2PalCameraCenterTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
       if (leftSubnumber > 0)

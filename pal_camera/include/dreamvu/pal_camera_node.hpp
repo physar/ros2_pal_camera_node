@@ -92,7 +92,6 @@ protected:
 
     void publishBase2PalCameraCenterTransform(rclcpp::Time t);
     void publishMap2BaseTransform(rclcpp::Time t);
-    void publishMap2PalCameraCenterTransform(rclcpp::Time t);
 
 private:
 
