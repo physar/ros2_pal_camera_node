@@ -7,5 +7,11 @@
 
         general:
             camera_model:       'pal_usb'
-            camera_name:        'pal4'
+            camera_name:        '/dreamvu/pal3/'
+            cam_pos_x:           0.0
+            cam_pos_y:           0.0
+            cam_pos_z:           0.06
+            cam_roll:            0.0
+            cam_pitch:           0.0
+            cam_yaw:             0.0
 

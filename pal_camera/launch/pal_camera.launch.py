@@ -99,11 +99,11 @@ def generate_launch_description():
             config_camera_path,
         # Overriding
         {
-        #            'camera_name': camera_name, 
-        #            'camera_model': camera_model,
+                    'camera_name': camera_name, 
+                    'camera_model': camera_model,
         #            'cam_pos_x': cam_pos_x,
         #            'cam_pos_y': cam_pos_y,
-        #            'cam_pos_z': cam_pos_z,
+                    'cam_pos_z': cam_pos_z,
         #            'cam_roll': cam_roll,
         #            'cam_pitch': cam_pitch,
         #            'cam_yaw': cam_yaw
@@ -117,6 +117,8 @@ def generate_launch_description():
 
     ld.add_action(declare_camera_name_cmd)
     ld.add_action(declare_camera_model_cmd)
+
+    ld.add_action(declare_config_camera_path_cmd)
 
     ld.add_action(declare_pos_x_cmd)
     ld.add_action(declare_pos_y_cmd)

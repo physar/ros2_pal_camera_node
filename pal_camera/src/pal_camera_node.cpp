@@ -195,9 +195,6 @@ void PalCameraNode::getParam(std::string paramName, T defValue, T& outVal, std::
                                          << paramName << "' is not available or is not valid, using the default value: "
                                          << defValue);
   }
-  RCLCPP_INFO_STREAM(get_logger(), "The parameter '"
-                                         << paramName << "' was available and set to the value: "
-                                         << outVal);
 
   if (!log_info.empty())
   {
@@ -213,19 +210,24 @@ void PalCameraNode::initParameters()
 {
   //rclcpp::Parameter paramVal;
   //std::string paramName;
+  std::string resultString;
 
   // The default values of mCamera are already initialized in pal_camera_node.hpp
 
   RCLCPP_INFO(get_logger(), "*** GENERAL parameters ***");
 
   getParam("general.camera_model", mCameraModel, mCameraModel, " * Camera model: ");
-  getParam("general.camera_name", mCameraName, mCameraName, " * Camera name: ");
+  getParam("general.camera_name", mCameraName, resultString, " * Camera name: ");
+  mCameraName = resultString;
+
   getParam("general.cam_pos_x", mCameraPosX, mCameraPosX, " * Camera position x: ");
   getParam("general.cam_pos_y", mCameraPosY, mCameraPosY, " * Camera position y: ");
   getParam("general.cam_pos_z", mCameraPosZ, mCameraPosZ, " * Camera position z: ");
   getParam("general.cam_roll", mCameraRoll, mCameraRoll, " * Camera orientation roll: ");
   getParam("general.cam_pitch", mCameraPitch, mCameraPitch, " * Camera orientation pitch: ");
   getParam("general.cam_yaw", mCameraYaw, mCameraYaw, " * Camera orientation yaw: ");
+
+  return; // Remove to see the following printing code
 
   RCLCPP_INFO(get_logger(), "*** LIST parameters ***");
 
@@ -251,13 +253,6 @@ void PalCameraNode::initParameters()
       ss << "\n " << prefix;
     }
     RCLCPP_INFO(this->get_logger(), "%s", ss.str().c_str());
-  auto my_parameter = parameters_client->list_parameters({"camera_model"}, 10);
-
-  ss << "\nMy parameter names:";
-  for (auto & name : my_parameter.names) {
-    ss << "\n " << name;
-  }
-    RCLCPP_INFO(this->get_logger(), "%s", ss.str().c_str());
 
 
 }
@@ -269,6 +264,7 @@ void PalCameraNode::initPublishers()
 {
 
   RCLCPP_INFO(get_logger(), "*** PUBLISHED TOPICS ***");
+  RCLCPP_INFO(get_logger(), mCameraName);
 
   //std::string topicPrefix = "/dreamvu/";
   //topicPrefix += "pal/";
@@ -312,6 +308,7 @@ void PalCameraNode::initPublishers()
   mDepthCamInfoMsg = mLeftCamInfoMsg;
 
   mTfBroadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+  mStaticTfBroadcaster = std::make_shared<tf2_ros::StaticTransformBroadcaster>(this);
 }
   
 /**
@@ -410,6 +407,9 @@ void PalCameraNode::publishImageWithInfo(cv::Mat& imgmat, image_transport::Camer
   //auto image = sl_tools::imageToROSmsg(img, imgFrameId, t);
   sensor_msgs::msg::Image::SharedPtr imgMsg = cv_bridge::CvImage(std_msgs::msg::Header(), "bgr8", imgmat).toImageMsg();
 
+  // TBC
+  RCLCPP_INFO(get_logger(), " Publishing Image with FrameId: %s", imgFrameId.c_str());
+
   imgMsg->header.stamp = t;
   imgMsg->header.frame_id = imgFrameId;
   imgMsg->encoding = sensor_msgs::image_encodings::BGR8;
@@ -430,6 +430,10 @@ void PalCameraNode::publishBase2PalCameraCenterTransform(rclcpp::Time stamp)
      transformStamped->header.stamp = stamp;
      transformStamped->header.frame_id = "base_link";
      transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
+     //transformStamped->child_frame_id = "camera_center";
+
+     // TBC
+     RCLCPP_INFO(get_logger(), "Publishing the transformation from %s to %s", transformStamped->header.frame_id.c_str(), transformStamped->child_frame_id.c_str());
 
      // At the moment, message filled by a tranformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
@@ -437,8 +441,10 @@ void PalCameraNode::publishBase2PalCameraCenterTransform(rclcpp::Time stamp)
      tf2::Transform mBase2PalCameraTransf; // Coordinates of the camera frame in base frame
 
      mBase2PalCameraTransf.setIdentity();
+
      tf2::Vector3 translation = mBase2PalCameraTransf.getOrigin();
      tf2::Quaternion quat = mBase2PalCameraTransf.getRotation();
+
      translation.setValue(mCameraPosX, mCameraPosY, mCameraPosZ);
      quat.setRPY(mCameraRoll,mCameraPitch,mCameraYaw);
 
@@ -450,7 +456,7 @@ void PalCameraNode::publishBase2PalCameraCenterTransform(rclcpp::Time stamp)
      transformStamped->transform.rotation.z = quat.z();
      transformStamped->transform.rotation.w = quat.w();
 
-     mTfBroadcaster->sendTransform(*(transformStamped.get()));
+     mStaticTfBroadcaster->sendTransform(*(transformStamped.get()));
 }
 
 /**
@@ -466,7 +472,41 @@ void PalCameraNode::publishMap2BaseTransform(rclcpp::Time stamp)
      transformStamped->header.frame_id = "map";
      transformStamped->child_frame_id = "base_link";
 
-     // At the moment, message filled by a tranformation defaulted to Identity()
+     // At the moment, message filled by a transformation defaulted to Identity()
+     // TBF, inspired by line 3828 of zed_camera_component
+
+     tf2::Transform mMap2BaseTransf; // Coordinates of the camera frame in base frame
+
+     mMap2BaseTransf.setIdentity();
+     tf2::Vector3 translation = mMap2BaseTransf.getOrigin();
+     tf2::Quaternion quat = mMap2BaseTransf.getRotation();
+
+     transformStamped->transform.translation.x = translation.x();
+     transformStamped->transform.translation.y = translation.y();
+     transformStamped->transform.translation.z = translation.z() + 0.0;
+     transformStamped->transform.rotation.x = quat.x();
+     transformStamped->transform.rotation.y = quat.y();
+     transformStamped->transform.rotation.z = quat.z();
+     transformStamped->transform.rotation.w = quat.w();
+
+     mTfBroadcaster->sendTransform(*(transformStamped.get()));
+}
+
+/**
+ * Define the transformation between the center of the camera and the center of the map.
+ **/
+
+void PalCameraNode::publishMap2PalCameraCenterTransform(rclcpp::Time stamp)
+{
+     transfMsgPtr transformStamped = std::make_shared<geometry_msgs::msg::TransformStamped>();
+
+     transformStamped->header.stamp = stamp;
+     transformStamped->header.frame_id = "base_link";
+     transformStamped->child_frame_id = mCameraName + mCameraCenterFrameId;
+
+     RCLCPP_INFO(get_logger(), "Publishing the NEW transformation from %s to %s", transformStamped->header.frame_id.c_str(), transformStamped->child_frame_id.c_str());
+
+     // At the moment, message filled by a transformation defaulted to Identity()
      // TBF, inspired by line 3828 of zed_camera_component
 
      tf2::Transform mMap2BaseTransf; // Coordinates of the camera frame in base frame
@@ -542,6 +582,7 @@ void PalCameraNode::grab_loop()
 
      RCLCPP_INFO_ONCE(get_logger(), "Publishing updates on the transform the origin of the map to the camera center");
      publishMap2BaseTransform(timeStamp);
+     //publishMap2PalCameraCenterTransform(timeStamp);
 
      // ----> Publish the left image if someone has subscribed to
       if (leftSubnumber > 0)
@@ -549,6 +590,7 @@ void PalCameraNode::grab_loop()
           RCLCPP_INFO_ONCE(get_logger(), "Publishing first left-image of the  PAL camera");
           cv::Mat mat_left = cv::Mat(g_imgLeft.rows, g_imgLeft.cols, CV_8UC3, g_imgLeft.Raw.u8_data);
           publishImageWithInfo(mat_left, mPubLeft, mLeftCamInfoMsg, mCameraName + mCameraCenterFrameId, timeStamp); // should rotate 90 deg to get image coordinates
+//          publishImageWithInfo(mat_left, mPubLeft, mLeftCamInfoMsg, "camera_center",  timeStamp); // should rotate 90 deg to get image coordinates
       }
 
      // ----> Publish the right image if someone has subscribed to

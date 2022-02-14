@@ -34,6 +34,7 @@
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf2_ros/static_transform_broadcaster.h>
 
 #include <image_transport/image_transport.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
@@ -91,6 +92,7 @@ protected:
 
     void publishBase2PalCameraCenterTransform(rclcpp::Time t);
     void publishMap2BaseTransform(rclcpp::Time t);
+    void publishMap2PalCameraCenterTransform(rclcpp::Time t);
 
 private:
 
@@ -159,6 +161,7 @@ private:
     std::unique_ptr<tf2_ros::Buffer> mTfBuffer;
     std::shared_ptr<tf2_ros::TransformListener> mTfListener;
     std::shared_ptr<tf2_ros::TransformBroadcaster> mTfBroadcaster;
+    std::shared_ptr<tf2_ros::StaticTransformBroadcaster> mStaticTfBroadcaster;
     // <---- initialization Transform listener
 
 }; // end of class PalCameraNode
