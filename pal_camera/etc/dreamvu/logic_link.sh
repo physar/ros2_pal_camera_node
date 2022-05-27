@@ -16,5 +16,5 @@ ln -sf $pal_sdk_dir/lib/libPAL_DE.so
 ln -sf $pal_sdk_dir/lib/libPAL_SSD.so 
 cd ..
 
-mkdir -p ~/local/etc/dreamvu
+mkdir -p ~/.local/etc/dreamvu
 cp -p ./etc/dreamvu/SavedPalProperties.txt ~/.local/etc/dreamvu/
