@@ -83,6 +83,7 @@ $ sudo apt install ros-humble-image-transport
 $ sudo apt install ros-humble-camera-info-manager
 $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-v4l2-camera
+```
 
 * Ubuntu 20.04 (Focal Fossa): [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
 
