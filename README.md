@@ -30,30 +30,37 @@ This package lets you use the PAL camera with ROS2. It will provide access to th
 ## Known issues
 
 * The published messages require a chain of coordinate transformations from the sensor to the robot base to the map to allow rviz2 to visualize the images and point cloud.
-* The software is currently tested on two computers, more tests are on the way. 
-* The node works with SDK v1.2 for Ubuntu 18.04 (18 April 2021), while you expect for ros-foxy that the version for 20.04 (15 May 2021) should be the best choice.
+* The software is currently tested on three computers, more tests are on the way. 
+* The node works with SDK v1.2 for Ubuntu 18.04 (18 April 2021), while you expect for ros-foxy that the version for 20.04 (15 May 2021) should be the best choice. Unfortunately, the 20.04 version doesn't contain the necessary python-libraries. This is still the case for the version released on [github](https://github.com/DreamVu/PAL-USB/tree/Ubuntu-20.04/lib) (last updated 5 January 2022).
+* The package is tested with the zip version of SDK v1.2 for Ubuntu 18.04. It should still be tested with [github version](https://github.com/DreamVu/PAL-USB/tree/Ubuntu-18.04/) of this SDK.
 
 ## Installation
 
+The installation depends on your Long Term Support version of Ubuntu. Installation instructions are available of Ubuntu 22.04 and 20.04 LTS.
+
 ### Prerequisites
+
+* [Ubuntu 22.04 (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/)
+
+or
 
 * [Ubuntu 20.04 (Focal Fossa)](https://releases.ubuntu.com/focal/)
 
-Next to the default packages, also install
+Next to the default packages, also install (works for both Ubuntu versions)
 
 ```bash
 sudo apt install usbutils
 sudo apt install v4l-utils
 
-suda add-apt-repository ppa:deadsnakes/ppa
+sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
 sudo apt install python3.6-dev
 sudo apt install python3-pip
 ```
 
-* [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
+* [ROS2](https://docs.ros.org/)
 
-If the ros-foxy repository is not already on your package list, add it
+If the ros repository is not already on your package list, add it
 
 ```bash
 sudo apt update && sudo apt install curl gnupg2 lsb-release
@@ -63,6 +70,21 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 
 sudo apt update
 ```
+Now you have to choose the right combination of your Ubuntu and ROS2 version:
+
+* Ubuntu 22.04 (Jammy Jellyfish): [ROS2 Humble Hawksbilly](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
+
+This ros-node is using the following ros-packages:
+
+```bash
+$ sudo apt install ros-humble-ros-base
+$ sudo apt install ros-humble-rviz2
+$ sudo apt install ros-humble-image-transport
+$ sudo apt install ros-humble-camera-info-manager
+$ sudo apt install ros-humble-image-view
+$ sudo apt install ros-humble-v4l2-camera
+
+* Ubuntu 20.04 (Focal Fossa): [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
 
 This ros-node is using the following ros-packages:
 
@@ -74,7 +96,10 @@ $ sudo apt install ros-foxy-camera-info-manager
 $ sudo apt install ros-foxy-image-view
 $ sudo apt install ros-foxy-v4l2-camera
 ```
-* [Colcon build system](https://docs.ros.org/en/foxy/Tutorials/Colcon-Tutorial.html)
+
+The instructions hereafter are again the same for both combinations (22.04: Jammy / Humble) and (20.04: Focal / Foxy).
+
+* [Colcon build system](https://docs.ros.org/en/humble/Tutorials/Colcon-Tutorial.html)
 ```bash
 $ sudo apt install python3-rosdep2
 $ sudo apt install python3-colcon-common-extensions
