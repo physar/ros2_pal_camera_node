@@ -145,7 +145,7 @@ bool PalCameraNode::startCamera()
   {
 
     RCLCPP_WARN(get_logger(), "Not able to load PAL settings from properties file at default location:");
-    RCLCPP_WARN(get_logger(), properties_file);
+    RCLCPP_WARN(get_logger(), properties_file.c_str());
 
     mCameraProperties = default_properties;
   }
