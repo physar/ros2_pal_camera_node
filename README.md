@@ -85,7 +85,7 @@ $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-v4l2-camera
 ```
 
-* Ubuntu 20.04 (Focal Fossa): [ROS2 Foxy Fitxroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
+* Ubuntu 20.04 (Focal Fossa): [ROS2 Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
 
 This ros-node is using the following ros-packages:
 
