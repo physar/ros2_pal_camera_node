@@ -39,7 +39,7 @@ find_package(cv_bridge REQUIRED)
 
 #pkg_search_module(PKG_OPENCV REQUIRED opencv)
 
-set(AVAILABLE_ROS_VERSIONS "foxy")
+set(AVAILABLE_ROS_VERSIONS "foxy" "humble")
 
 foreach(version $AVAILABLE_ROS_VERSIONS})
         find_path(ROS_LIBRARY_PATH librclcpp.so /opt/ros/${version}/lib)
