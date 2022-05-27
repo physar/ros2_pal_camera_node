@@ -138,6 +138,7 @@ $ cd ./ros2_pal_camera_node/pal_camera/
 $ source ./etc/dreamvu/logic_link.sh PAL_SDK_DIR
 $ cd ../../..
 $ sudo apt-get update
+$ /opt/ros/$ROS_DISTRO/setup.bash
 $ rosdep update
 $ rosdep install --from-paths src --ignore-src -r -y
 $ colcon build --packages-select pal_camera --symlink-install --cmake-args=-DCMAKE_BUILD_TYPE=Release
