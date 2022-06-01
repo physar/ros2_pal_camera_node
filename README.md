@@ -33,20 +33,22 @@ This package lets you use the PAL camera with ROS2. It will provide access to th
 * The software is currently tested on three computers, more tests are on the way. 
 * The node works with SDK v1.2 for Ubuntu 18.04 (18 April 2021), while you expect for ros-foxy that the version for 20.04 (15 May 2021) should be the best choice. Unfortunately, the 20.04 version doesn't contain the necessary python-libraries. This is still the case for the version released on [github](https://github.com/DreamVu/PAL-USB/tree/Ubuntu-20.04/lib) (last updated 5 January 2022).
 * The package is tested with the zip version of SDK v1.2 for Ubuntu 18.04. It should still be tested with [github version](https://github.com/DreamVu/PAL-USB/tree/Ubuntu-18.04/) of this SDK.
+* The sensitivity for ROS and Ubuntu version originates from the dependence on the python3 version. Ubuntu 18.04 had as default python3.6, Ubuntu 20.04 had as default python3.8, Ubuntu 22.04 has as default python3.10. Because Dreamvu drivers perform their warping with a network that has python3.6 bindings, also python3.6 bindings are needed for the ros2 bindings. Yet, the virtual python3.6 environment Dreamvu provides gives conflicts for the latest ROS2 releases.
+* Tried to update to Ubuntu 22.04 and ROS2 Humble, but this fails on rclpy bindings.
 
 ## Installation
 
-The installation depends on your Long Term Support version of Ubuntu. Installation instructions are available of Ubuntu 22.04 and 20.04 LTS.
+The installation depends on your Long Term Support version of Ubuntu. Installation instructions are available of <!--Ubuntu 22.04 and--> 20.04 LTS.
 
 ### Prerequisites
 
-* [Ubuntu 22.04 (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/)
+<!--* [Ubuntu 22.04 (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/)
 
-or
+or-->
 
 * [Ubuntu 20.04 (Focal Fossa)](https://releases.ubuntu.com/focal/)
 
-Next to the default packages, also install (works for both Ubuntu versions)
+Next to the default packages, also install <!--(works for both Ubuntu versions)-->
 
 ```bash
 sudo apt install usbutils
@@ -70,7 +72,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 
 sudo apt update
 ```
-Now you have to choose the right combination of your Ubuntu and ROS2 version:
+<!--Now you have to choose the right combination of your Ubuntu and ROS2 version:
 
 * Ubuntu 22.04 (Jammy Jellyfish): [ROS2 Humble Hawksbilly](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
 
@@ -84,6 +86,7 @@ $ sudo apt install ros-humble-camera-info-manager
 $ sudo apt install ros-humble-image-view
 $ sudo apt install ros-humble-v4l2-camera
 ```
+-->
 
 * Ubuntu 20.04 (Focal Fossa): [ROS2 Foxy Fitzroy](https://docs.ros.org/en/foxy/Installation/Ubuntu-Install-Debians.html)
 
@@ -208,6 +211,8 @@ Add in this view an Image (for the topics ```/dreamvu/pal/get/left```, ```/dream
 * If your PAL camera is not connected to a USB 3.1, it is not visible with <tt>lsusb | grep See3CAM</tt>. Use in that case a faster USB port.
 
 * If you are using the 20.04 version of the USB, you will encounter an PAL_MIDAS::Init() assertion. Use the 18.04 version of the software, by running the logic_link script again.
+
+* If you are using the 18.04 version of the Dreamvu drivers, but still get the PAL_MIDAS:Init() assertion, you may have forgotten to do ```source /opt/ros/foxy/setup.bash``` for this terminal.
 
 * rviz2 is dropping messages. This means that your robot is not publishing any coordinate transformations from the map to the base_link. The camera images are published from the coordinate system 'pal_camera_center'.
 
